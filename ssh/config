@@ -1,0 +1,27 @@
+# - - - - - - - - - - - - LINUX  - - - - - - - - - - - - - - - - - -
+Host cmslpc*.fnal.gov
+    GSSAPIAuthentication yes
+    GSSAPIDelegateCredentials yes
+    GSSAPITrustDNS yes
+    StrictHostKeyChecking no
+    UserKnownHostsFile /dev/null
+#  - - - - - - - - - - - - LINUX  - - - - - - - - - - - - - - - - -
+#Host !*.cern.ch lxplus* aisplus*
+#    CanonicalizeHostname yes
+#    CanonicalDomains cern.ch
+
+#Host *.cern.ch
+#    User saepark
+#    ForwardX11 yes
+    #allow login per Kerberos
+#    GSSAPIAuthentication yes
+    #Transmit AFS toke 
+#    GSSAPIDelegateCredentials yes
+    #Needed for non FQDNs
+#    GSSAPITrustDNS yes
+#    StrictHostKeyChecking no
+    
+#Host lxplus*.cern.ch aisplus*.cern.ch
+#    HostKeyAlias cernlxpluskey
+#    UserKnownHostsFile ~/.ssh/known_hosts.lxplus
+ 

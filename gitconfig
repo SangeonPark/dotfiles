@@ -1,0 +1,7 @@
+[user]
+	email = saepark35@gmail.com
+	name = SangeonPark
+[core]
+	editor = subl --wait --new-window
+[credential]
+	helper = store
