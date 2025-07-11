@@ -12,4 +12,28 @@
     ~/.p10k.zsh: p10k.zsh
     ~/.tmux.conf: tmux.conf
 
-
+- shell:
+  - [git submodule update --init --recursive, Installing submodules]
+  - [su -c 'apt-get update && apt-get install -y sudo', Setup sudo package]
+  - [sudo apt-get install -y less nano htop ncdu nvtop lsof rsync btop jq, Install essential Linux utilities]
+  - [curl -LsSf https://astral.sh/uv/install.sh | sh, Install uv Python package manager]
+  - [source $HOME/.local/bin/env, Source uv environment]
+  - [uv python install 3.12, Install Python 3.12]
+  - [uv venv, Create virtual environment]
+  - [source .venv/bin/activate, Activate virtual environment]
+  - [uv pip install ipykernel simple-gpu-scheduler, Install Python packages for Jupyter and GPU scheduling]
+  - [python -m ipykernel install --user --name=venv, Register kernel for Jupyter notebooks]
+  - [mkdir git && cd git, Create and enter git directory]
+  - [git clone https://github.com/SangeonPark/dotfiles.git, Clone dotfiles repository]
+  - [cd dotfiles, Enter dotfiles directory]
+  -
+    command: ./install.sh --zsh --tmux
+    description: Install ZSH and tmux configurations
+    stdout: true
+  - [chsh -s /usr/bin/zsh, Change default shell to ZSH]
+  -
+    command: ./deploy.sh
+    description: Deploy dotfiles configuration
+    stdout: true
+  - [cd .., Return to parent directory]
+  - [echo ./scripts/setup_github.sh "saepark35@gmail.com" "Sangeon Park", Display GitHub setup command]
