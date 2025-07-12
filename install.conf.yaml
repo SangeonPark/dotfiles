@@ -2,35 +2,192 @@
 
 - shell:
   - [git submodule update --init --recursive, Installing submodules]
-  - [su -c 'apt-get update && apt-get install -y sudo', Setup sudo package]
+  #- [su -c 'apt-get update && apt-get install -y sudo', Setup sudo package]
   - [sudo apt-get install -y less nano htop ncdu nvtop lsof rsync btop jq bat zsh tmux, Install essential Linux utilities]
-  - [wget https://github.com/lsd-rs/lsd/releases/download/v1.1.5/lsd_1.1.5_amd64.deb && sudo dpkg -i lsd_1.1.5_amd64.deb, Download and install lsd]
-  - [rm -rf lsd_1.1.5_amd64.deb, Remove lsd_1.1.5_amd64.deb]
-  - [curl -LsSf https://astral.sh/uv/install.sh | sh, Install uv Python package manager]
+  
+  # Install lsd only if not already installed
+  -
+    command: |
+      if ! command -v lsd &> /dev/null; then
+        wget https://github.com/lsd-rs/lsd/releases/download/v1.1.5/lsd_1.1.5_amd64.deb && 
+        sudo dpkg -i lsd_1.1.5_amd64.deb &&
+        rm -rf lsd_1.1.5_amd64.deb
+      else
+        echo "lsd already installed, skipping..."
+      fi
+    description: Download and install lsd (if not already installed)
+    stdout: true
+  
+  # Install uv only if not already installed
+  -
+    command: |
+      if ! command -v uv &> /dev/null; then
+        curl -LsSf https://astral.sh/uv/install.sh | sh
+      else
+        echo "uv already installed, skipping..."
+      fi
+    description: Install uv Python package manager (if not already installed)
+    stdout: true
+  
   - [source $HOME/.local/bin/env, Source uv environment]
-  - [uv python install 3.12, Install Python 3.12]
-  - [uv venv, Create virtual environment]
+  
+  # Install Python 3.12 only if not already installed
+  -
+    command: |
+      if ! uv python list | grep -q "3.12"; then
+        uv python install 3.12
+      else
+        echo "Python 3.12 already installed, skipping..."
+      fi
+    description: Install Python 3.12 (if not already installed)
+    stdout: true
+  
+  # Create venv only if it doesn't exist
+  -
+    command: |
+      if [ ! -d ".venv" ]; then
+        uv venv
+      else
+        echo "Virtual environment already exists, skipping..."
+      fi
+    description: Create virtual environment (if not already exists)
+    stdout: true
+  
   - [source .venv/bin/activate, Activate virtual environment]
-  - [uv pip install ipykernel simple-gpu-scheduler, Install Python packages for Jupyter and GPU scheduling]
-  - [python -m ipykernel install --user --name=venv, Register kernel for Jupyter notebooks]
-  - [chsh -s $(which zsh), Change default shell to ZSH]
+  
+  # Install packages only if not already installed
+  -
+    command: |
+      source .venv/bin/activate
+      if ! uv pip list | grep -q "ipykernel"; then
+        uv pip install ipykernel simple-gpu-scheduler
+      else
+        echo "Python packages already installed, skipping..."
+      fi
+    description: Install Python packages for Jupyter and GPU scheduling (if not already installed)
+    stdout: true
+  
+  # Install kernel only if not already installed
+  -
+    command: |
+      if ! jupyter kernelspec list 2>/dev/null | grep -q "venv"; then
+        source .venv/bin/activate && python -m ipykernel install --user --name=venv
+      else
+        echo "Jupyter kernel already installed, skipping..."
+      fi
+    description: Register kernel for Jupyter notebooks (if not already registered)
+    stdout: true
+  
+  # Change shell only if not already zsh
+  -
+    command: |
+      if [ "$SHELL" != "$(which zsh)" ]; then
+        sudo usermod -s $(which zsh) $USER
+      else
+        echo "Shell already set to zsh, skipping..."
+      fi
+    description: Change default shell to ZSH (if not already set)
+    stdout: true
+  
   -
     command: echo " --------- INSTALLING DEPENDENCIES ⏳ ----------- "
     description: Display dependencies installation header
     stdout: true
+  
+  # Install Oh My Zsh only if not already installed
   -
-    command: sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
-    description: Install Oh My Zsh in unattended mode
+    command: |
+      if [ ! -d "$HOME/.oh-my-zsh" ]; then
+        sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
+      else
+        echo "Oh My Zsh already installed, skipping..."
+      fi
+    description: Install Oh My Zsh in unattended mode (if not already installed)
     stdout: true
-    
-  - ['git clone https://github.com/romkatv/powerlevel10k.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/themes/powerlevel10k', Install Powerlevel10k theme]
-  - ['git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting', Install ZSH syntax highlighting plugin]
-  - ['git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions', Install ZSH autosuggestions plugin]
-  - ['git clone https://github.com/zsh-users/zsh-completions ${ZSH_CUSTOM:=~/.oh-my-zsh/custom}/plugins/zsh-completions', Install ZSH completions plugin]
-  - ['git clone https://github.com/zsh-users/zsh-history-substring-search ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-history-substring-search', Install ZSH history substring search plugin]
-  - ['git clone https://github.com/zsh-users/zsh-you-should-use ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/you-should-use', Install ZSH you-should-use plugin]
-  - [git clone https://github.com/jimeh/tmux-themepack.git ~/.tmux-themepack, Install tmux theme pack]
-  - [git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf && ~/.fzf/install, Install fzf]
+  
+  # Install Powerlevel10k only if not already installed
+  -
+    command: |
+      if [ ! -d "${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k" ]; then
+        git clone https://github.com/romkatv/powerlevel10k.git ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k
+      else
+        echo "Powerlevel10k already installed, skipping..."
+      fi
+    description: Install Powerlevel10k theme (if not already installed)
+    stdout: true
+  
+  # Install ZSH plugins only if not already installed
+  -
+    command: |
+      if [ ! -d "${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting" ]; then
+        git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
+      else
+        echo "ZSH syntax highlighting already installed, skipping..."
+      fi
+    description: Install ZSH syntax highlighting plugin (if not already installed)
+    stdout: true
+  
+  -
+    command: |
+      if [ ! -d "${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/plugins/zsh-autosuggestions" ]; then
+        git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
+      else
+        echo "ZSH autosuggestions already installed, skipping..."
+      fi
+    description: Install ZSH autosuggestions plugin (if not already installed)
+    stdout: true
+  
+  -
+    command: |
+      if [ ! -d "${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/plugins/zsh-completions" ]; then
+        git clone https://github.com/zsh-users/zsh-completions ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/plugins/zsh-completions
+      else
+        echo "ZSH completions already installed, skipping..."
+      fi
+    description: Install ZSH completions plugin (if not already installed)
+    stdout: true
+  
+  -
+    command: |
+      if [ ! -d "${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/plugins/zsh-history-substring-search" ]; then
+        git clone https://github.com/zsh-users/zsh-history-substring-search ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/plugins/zsh-history-substring-search
+      else
+        echo "ZSH history substring search already installed, skipping..."
+      fi
+    description: Install ZSH history substring search plugin (if not already installed)
+    stdout: true
+  
+  -
+    command: |
+      if [ ! -d "${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/plugins/you-should-use" ]; then
+        git clone https://github.com/MichaelAquilina/zsh-you-should-use.git ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/plugins/you-should-use
+      else
+        echo "ZSH you-should-use already installed, skipping..."
+      fi
+    description: Install ZSH you-should-use plugin (if not already installed)
+    stdout: true
+  
+  # Install tmux theme pack only if not already installed
+  -
+    command: |
+      if [ ! -d "$HOME/.tmux-themepack" ]; then
+        git clone https://github.com/jimeh/tmux-themepack.git ~/.tmux-themepack
+      else
+        echo "tmux theme pack already installed, skipping..."
+      fi
+    description: Install tmux theme pack (if not already installed)
+    stdout: true
+  
+  # Install fzf only if not already installed
+  -
+    command: |
+      if [ ! -d "$HOME/.fzf" ]; then
+        git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf && ~/.fzf/install --all
+      else
+        echo "fzf already installed, skipping..."
+      fi
+    description: Install fzf (if not already installed)
+    stdout: true
 
 - link:
     ~/.profile: profile
