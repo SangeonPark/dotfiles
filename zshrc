@@ -109,9 +109,9 @@ source $ZSH/oh-my-zsh.sh
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 
 # Unlimited history configuration
-HISTSIZE=1000000
-SAVEHIST=1000000
-HISTFILE=~/.zsh_history
+HISTFILE="$HOME/.zsh_history"
+HISTSIZE=10000000
+SAVEHIST=10000000
 
 # Advanced history options
 setopt BANG_HIST                 # Treat the '!' character specially during expansion.
