@@ -212,7 +212,21 @@
       fi
     description: Install Claude Code CLI tool (if not already installed)
     stdout: true
-    
+  -
+    command: |
+      if [ -d "/workspace" ]; then
+        if [ ! -e ~/.cache/huggingface ]; then
+          mkdir -p ~/.cache
+          ln -s /workspace/huggingface_cache ~/.cache/huggingface
+          echo "Created symlink: ~/.cache/huggingface -> /workspace/huggingface_cache"
+        else
+          echo "~/.cache/huggingface already exists, skipping symlink creation"
+        fi
+      else
+        echo "/workspace directory not found, skipping huggingface cache symlink"
+      fi
+    description: Create huggingface cache symlink (if /workspace exists and symlink doesn't exist)
+    stdout: true    
 - link:
     ~/.profile: profile
     ~/.bashrc: bashrc
