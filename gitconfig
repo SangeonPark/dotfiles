@@ -1,5 +1,20 @@
+[alias]
+	grl = log --graph --pretty=oneline --abbrev-commit
+
 [user]
 	name = Sangeon Park
 	email = saepark35@gmail.com
+	username = SangeonPark
+
 [credential]
 	helper = store
+	
+[init]
+	defaultBranch = main
+
+[color]
+    ui = auto
+
+[pretty]
+	line = "%C(auto)%h %<|(60,trunc)%s %C(green)%ad%C(auto)%d"
+	detail = "%C(auto)%h %s%n  %C(yellow)by %C(blue)%an %C(magenta)<%ae> [%G?] %C(green)%ad%n %C(auto)%d%n"

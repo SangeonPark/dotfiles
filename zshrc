@@ -74,7 +74,7 @@ COMPLETION_WAITING_DOTS="true"
 # Custom plugins may be added to $ZSH_CUSTOM/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(git zsh-autosuggestions zsh-syntax-highlighting you-should-use zsh-bat) 
+plugins=(git zsh-autosuggestions zsh-syntax-highlighting you-should-use zsh-history-substring-search) 
 
 source $ZSH/oh-my-zsh.sh
 
@@ -165,6 +165,16 @@ alias l='ls -l'
 alias la='ls -a'
 alias lla='ls -la'
 alias lt='ls --tree'
+
+# custom cat alias
+alias cat=bat
+alias rcat='\cat'
+export MANPAGER="sh -c 'col -bx | bat -l man -p'"
+
+# fzf configuration
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh && source <(fzf --zsh)
+
+
 
 #Environment variables
 if [ -f ~/.env ]; then
