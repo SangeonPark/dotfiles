@@ -226,7 +226,22 @@
         echo "/workspace directory not found, skipping huggingface cache symlink"
       fi
     description: Create huggingface cache symlink (if /workspace exists and symlink doesn't exist)
-    stdout: true    
+    stdout: true  
+  -
+    command: |
+      if command -v batcat &> /dev/null; then
+        if [ ! -L ~/.local/bin/bat ] && [ ! -f ~/.local/bin/bat ]; then
+          mkdir -p ~/.local/bin
+          ln -s /usr/bin/batcat ~/.local/bin/bat
+          echo "Created symlink: ~/.local/bin/bat -> /usr/bin/batcat"
+        else
+          echo "bat command already available, skipping symlink creation"
+        fi
+      else
+        echo "batcat not found, cannot create bat symlink"
+      fi
+    description: Create bat symlink to batcat (if batcat exists and bat doesn't)
+    stdout: true
 - link:
     ~/.profile: profile
     ~/.bashrc: bashrc
