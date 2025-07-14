@@ -210,3 +210,14 @@
       fi
     description: Create bat symlink to batcat (if batcat exists and bat doesn't)
     stdout: true
+
+  -
+    command: |
+      if [ ! -f ~/.local/bin/env ]; then
+        mkdir -p ~/.local/bin && printf '#!/bin/sh\n# add binaries to PATH if they aren'\''t added yet\n# affix colons on either side of $PATH to simplify matching\ncase ":${PATH}:" in\n    *:"$HOME/.local/bin":*)\n        ;;\n    *)\n        # Prepending path in case a system-installed binary needs to be overridden\n        export PATH="$HOME/.local/bin:$PATH"\n        ;;\nesac\n' > ~/.local/bin/env && chmod +x ~/.local/bin/env
+        echo "Created ~/.local/bin/env"
+      else
+        echo "~/.local/bin/env already exists, skipping..."
+      fi
+    description: Create ~/.local/bin/env script for PATH management (if not exists)
+    stdout: true
