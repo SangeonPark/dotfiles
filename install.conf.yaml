@@ -185,6 +185,7 @@
       if [ -d "/workspace" ]; then
         if [ ! -e ~/.cache/huggingface ]; then
           mkdir -p ~/.cache
+          mkdir -p /workspace/huggingface_cache
           ln -s /workspace/huggingface_cache ~/.cache/huggingface
           echo "Created symlink: ~/.cache/huggingface -> /workspace/huggingface_cache"
         else
@@ -194,7 +195,7 @@
         echo "/workspace directory not found, skipping huggingface cache symlink"
       fi
     description: Create huggingface cache symlink (if /workspace exists and symlink doesn't exist)
-    stdout: true  
+    stdout: true
   -
     command: |
       if command -v batcat &> /dev/null; then
