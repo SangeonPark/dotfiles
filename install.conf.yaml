@@ -1,8 +1,33 @@
 - clean: ['~']
 
+- link:
+    ~/.profile: profile
+    ~/.bashrc: bashrc
+    ~/.bash_logout: bash_logout
+    ~/.gitconfig: gitconfig
+    ~/.ssh/config:
+        path: ssh/config
+        create: true
+    ~/.zshrc: zshrc
+    ~/.p10k.zsh: p10k.zsh
+    ~/.tmux.conf: tmux.conf
+
 - shell:
   - [git submodule update --init --recursive, Installing submodules]
-  #- [su -c 'apt-get update && apt-get install -y sudo', Setup sudo package]
+  -
+    command: |
+      if command -v sudo &> /dev/null; then
+        echo "sudo already available"
+      elif [ "$EUID" -eq 0 ]; then
+        apt-get update && apt-get install -y sudo
+      elif su -c 'apt-get update && apt-get install -y sudo' 2>/dev/null; then
+        echo "sudo installed via su"
+      else
+        echo "Cannot install sudo. Please install manually or run as root."
+        echo "Continuing anyway - sudo may already be available..."
+      fi
+    description: Ensure sudo is available (multiple fallback methods)
+    stdout: true
   - [sudo apt-get install -y less nano htop ncdu nvtop lsof rsync btop jq bat zsh tmux, Install essential Linux utilities]
   
   # Install lsd only if not already installed
@@ -18,66 +43,9 @@
     description: Download and install lsd (if not already installed)
     stdout: true
   
-  # Install uv only if not already installed
-  -
-    command: |
-      if ! command -v uv &> /dev/null; then
-        curl -LsSf https://astral.sh/uv/install.sh | sh
-      else
-        echo "uv already installed, skipping..."
-      fi
-    description: Install uv Python package manager (if not already installed)
-    stdout: true
-  
-  - [source $HOME/.local/bin/env, Source uv environment]
-  
-  # Install Python 3.12 only if not already installed
-  -
-    command: |
-      if ! uv python list | grep -q "3.12"; then
-        uv python install 3.12
-      else
-        echo "Python 3.12 already installed, skipping..."
-      fi
-    description: Install Python 3.12 (if not already installed)
-    stdout: true
-  
-  # Create venv only if it doesn't exist
-  -
-    command: |
-      if [ ! -d ".venv" ]; then
-        uv venv
-      else
-        echo "Virtual environment already exists, skipping..."
-      fi
-    description: Create virtual environment (if not already exists)
-    stdout: true
-  
-  - [source .venv/bin/activate, Activate virtual environment]
-  
-  # Install packages only if not already installed
-  -
-    command: |
-      source .venv/bin/activate
-      if ! uv pip list | grep -q "ipykernel"; then
-        uv pip install ipykernel simple-gpu-scheduler
-      else
-        echo "Python packages already installed, skipping..."
-      fi
-    description: Install Python packages for Jupyter and GPU scheduling (if not already installed)
-    stdout: true
-  
-  # Install kernel only if not already installed
-  -
-    command: |
-      if ! jupyter kernelspec list 2>/dev/null | grep -q "venv"; then
-        source .venv/bin/activate && python -m ipykernel install --user --name=venv
-      else
-        echo "Jupyter kernel already installed, skipping..."
-      fi
-    description: Register kernel for Jupyter notebooks (if not already registered)
-    stdout: true
-  
+  # Setup Python environment with uv, virtual environment, and packages
+  - [./setup_python.sh, Setup Python environment with uv, virtual environment, and packages]
+
   # Change shell only if not already zsh
   -
     command: |
@@ -242,14 +210,3 @@
       fi
     description: Create bat symlink to batcat (if batcat exists and bat doesn't)
     stdout: true
-- link:
-    ~/.profile: profile
-    ~/.bashrc: bashrc
-    ~/.bash_logout: bash_logout
-    ~/.gitconfig: gitconfig
-    ~/.ssh/config:
-        path: ssh/config
-        create: true
-    ~/.zshrc: zshrc
-    ~/.p10k.zsh: p10k.zsh
-    ~/.tmux.conf: tmux.conf
