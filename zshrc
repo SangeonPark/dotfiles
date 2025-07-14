@@ -174,9 +174,9 @@ alias lla='ls -la'
 alias lt='ls --tree'
 
 # custom cat alias
-alias cat=bat
-alias rcat='\cat'
-export MANPAGER="sh -c 'col -bx | bat -l man -p'"
+# alias cat=bat
+# alias rcat='\cat'
+# export MANPAGER="sh -c 'col -bx | bat -l man -p'"
 
 # fzf configuration
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh && source <(fzf --zsh)
