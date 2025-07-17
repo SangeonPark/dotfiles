@@ -44,7 +44,7 @@
     stdout: true
   
   # Setup Python environment with uv, virtual environment, and packages
-  #- [./setup_python.sh, Setup Python environment with uv, virtual environment, and packages]
+  - [./setup_python.sh, Setup Python environment with uv, virtual environment, and packages]
 
   # Change shell only if not already zsh
   -
