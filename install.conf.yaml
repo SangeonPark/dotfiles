@@ -28,7 +28,7 @@
       fi
     description: Ensure sudo is available (multiple fallback methods)
     stdout: true
-  - [sudo apt-get install -y less nano htop ncdu nvtop lsof rsync btop jq bat zsh tmux, Install essential Linux utilities]
+  - [sudo apt-get install -y less nano htop ncdu nvtop lsof rsync btop jq bat zsh tmux, Install essential Linux utilities psmisc]
   
   # Install lsd only if not already installed
   -
@@ -44,7 +44,7 @@
     stdout: true
   
   # Setup Python environment with uv, virtual environment, and packages
-  - [./setup_python.sh, Setup Python environment with uv, virtual environment, and packages]
+  #- [./setup_python.sh, Setup Python environment with uv, virtual environment, and packages]
 
   # Change shell only if not already zsh
   -

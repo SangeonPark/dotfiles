@@ -13,7 +13,11 @@ Host runpod2
 Host runpod3
     HostName 213.173.111.134
     User root
-    Port 29733
+    Port 48502
     IdentityFile ~/.ssh/id_ed25519
 
-
+Host runpod-2xH200
+    HostName 38.80.152.249
+    User root
+    Port 30962
+    IdentityFile ~/.ssh/id_ed25519
