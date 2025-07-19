@@ -187,3 +187,5 @@ alias lt='ls --tree'
 if [ -f ~/.env ]; then
     source ~/.env
 fi
+
+[ -f ~/.zshrc.local ] && source ~/.zshrc.local
