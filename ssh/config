@@ -29,3 +29,8 @@ Host runpod-inference
     IdentityFile ~/.ssh/id_ed25519
 
 
+Host runpod-jifan
+    HostName 205.196.19.18
+    User root
+    Port 11506
+    IdentityFile ~/.ssh/id_ed25519
