@@ -2,13 +2,16 @@
 
 - link:
     ~/.profile: profile
+      force: true
     ~/.bashrc: bashrc
+      force: true
     ~/.bash_logout: bash_logout
     ~/.gitconfig: gitconfig
     ~/.ssh/config:
         path: ssh/config
         create: true
     ~/.zshrc: zshrc
+      force: true
     ~/.p10k.zsh: p10k.zsh
     ~/.tmux.conf: tmux.conf
 
@@ -222,6 +225,3 @@
       fi
     description: Create ~/.local/bin/env script for PATH management (if not exists)
     stdout: true
-
-  - [source zshrc]  
-  
