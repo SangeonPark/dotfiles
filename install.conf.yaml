@@ -231,4 +231,4 @@
     description: Create ~/.local/bin/env script for PATH management (if not exists)
     stdout: true
 
-  - [source ~/.zshrc]  
+  - [source zshrc]  
