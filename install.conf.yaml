@@ -34,7 +34,9 @@
       fi
     description: Ensure sudo is available (multiple fallback methods)
     stdout: true
-  - [sudo apt-get install -y less nano htop ncdu nvtop lsof rsync btop jq bat zsh tmux, Install essential Linux utilities psmisc]
+#  - [sudo apt-get install -y less nano htop ncdu nvtop lsof rsync btop jq bat zsh tmux, Install essential Linux utilities psmisc]
+#  remove btop
+  - [sudo apt-get install -y less nano htop ncdu nvtop lsof rsync jq bat zsh tmux, Install essential Linux utilities psmisc]
   
   # Install lsd only if not already installed
   -
@@ -228,3 +230,5 @@
       fi
     description: Create ~/.local/bin/env script for PATH management (if not exists)
     stdout: true
+
+  - [source ~/.zshrc]  
