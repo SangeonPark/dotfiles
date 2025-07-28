@@ -1,36 +1,23 @@
-Host runpod
-    HostName 216.81.245.126
-    User root
-    Port 19425
-    IdentityFile ~/.ssh/id_ed25519
-
 Host runpod2
     HostName 216.81.248.115
     User root
     Port 15249
     IdentityFile ~/.ssh/id_ed25519
 
-Host runpod3
-    HostName 213.173.111.134
-    User root
-    Port 48502
-    IdentityFile ~/.ssh/id_ed25519
-
-Host runpod-2xH200
-    HostName 38.80.152.249
-    User root
-    Port 30962
-    IdentityFile ~/.ssh/id_ed25519
-
-Host runpod-inference
-    HostName 216.81.245.124
-    User root
-    Port 16135
-    IdentityFile ~/.ssh/id_ed25519
-
-
 Host runpod-jifan
     HostName 205.196.19.18
     User root
     Port 11506
+    IdentityFile ~/.ssh/id_ed25519
+
+Host runpod-olmo1B
+    HostName 38.80.152.249
+    User root
+    Port 30644
+    IdentityFile ~/.ssh/id_ed25519
+
+Host runpod-promptRM
+    HostName 38.80.152.249
+    User root
+    Port 30985
     IdentityFile ~/.ssh/id_ed25519
